@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.10'
 
 services:
   frontend:
@@ -13,14 +13,15 @@ services:
       - backend
 
   database:
-    container_name: db
+    container_name: db_user
     image: docker.io/postgres:15
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: rag
+     POSTGRES_PORT: 5432
+     POSTGRES_USER: ${POSTGRES_USER}
+     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+     POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
@@ -43,9 +44,9 @@ services:
       - database
       - milvus
     environment:
-      DATABASE_URL=postgresql://user:password@database:5432/rag
-      MILVUS_HOST=milvus
-      MILVUS_PORT=19530
+      DATABASE_URL: postgresql://user:password@database:5432/rag
+      MILVUS_HOST: milvus
+      MILVUS_PORT: 19530
 
 volumes:
   db_data:
